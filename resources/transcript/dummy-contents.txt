@@ -1,0 +1,1 @@
+python .\src\video_transcriber_fast.py "https://youtube.com/shorts/LmIuY4k7UIE?si=nibHAWNt7spmP38d" --model base --device cpu --language hi

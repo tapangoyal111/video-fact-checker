@@ -1,0 +1,22 @@
+# Comparison: Direct LLM Prompting vs Agentic Fact‑Checking Pipeline
+
+| Aspect | Direct LLM Prompting (Transcript + Metadata + Prompt) | Agentic Fact‑Checking Pipeline (Guide) |
+|--------|------------------------------------------------------|----------------------------------------|
+| **Input** | Raw transcript + video metadata (title, creator, date, URL) + a single prompt asking the LLM to fact‑check. | Transcript produced by yt-dlp + whisper.cpp, then processed through claim extraction, evidence retrieval, etc. |
+| **Core Idea** | Rely on the LLM’s internal knowledge and reasoning ability to assess claims in one shot. | Decompose the task: extract claims, gather external evidence, verify each claim, reason iteratively, and produce a structured report. |
+| **Use of External Sources** | Limited to what the LLM was trained on (up to its cutoff). No real‑time verification unless you augment with retrieval (RAG), but still limited to the retrieved snippets. | Actively queries up‑to‑date sources (search engines, APIs, databases) for each claim, providing fresh evidence and citations. |
+| **Claim‑Level Analysis** | The LLM may miss subtle claims or hallucinate; hard to trace which part of the transcript led to which conclusion. | Each claim is extracted, given an ID, and evaluated individually with evidence and confidence scores. |
+| **Transparency & Explainability** | Hard to see the reasoning process; the LLM provides a final answer but not the intermediate steps. | Full audit trail: thought process, actions (searches), observations, and memory updates are logged (ReAct style). |
+| **Handling of Uncertainty** | The LLM may over‑ or under‑state confidence; no explicit confidence scoring per claim. | Confidence scores (0‑100%) per claim, plus a confidence matrix evaluating evidence quality, source reliability, etc. |
+| **Context Manipulation Detection** | The LLM might miss cherry‑picking, misleading statistics, or omitted context unless explicitly prompted and given strong examples. | Dedicated modules check for cherry‑picking, missing denominators, outdated stats, selective quotation, correlation‑vs‑causation, etc. |
+| **Statistical Verification** | The LLM can do simple math if prompted, but may mis‑interpret units or fail to recalculate complex statistics. | Independent recalculation engine checks calculations, units, growth rates, and validates against source data. |
+| **Scalability to Long Videos** | Limited by the LLM’s context window; very long transcripts may be truncated or summarized, losing detail. | Processing is claim‑centric; only relevant sentences are sent to evidence retrieval, making it efficient for hour‑long videos. |
+| **Cost & Latency** | One LLM call (potentially large prompt) – cost depends on token usage; latency is single call but may be high for large prompts. | Multiple steps: transcription (cheap), then many small LLM or retrieval calls; can be optimized and parallelized. Higher total token use but more controllable. |
+| **Updatability** | To improve, you need to fine‑tune or prompt‑engineer the LLM; updating knowledge requires retraining or waiting for newer model versions. | Easy to plug in new evidence sources, update claim‑extraction rules, or improve verification modules without changing the core LLM (if used only for language tasks). |
+| **Risk of Hallucination** | High: the LLM may invent facts, sources, or quotes when uncertain. | Low: the agent is forbidden from hallucinating; it must return “UNVERIFIED” or rely on actual retrieved evidence. |
+| **Output Format** | Free‑form text; harder to enforce a strict 12‑section report without brittle prompt engineering. | Structured report generation follows the exact 12‑section format automatically. |
+| **Best For** | Quick, exploratory checks when you trust the LLM’s knowledge and need a fast answer. | Rigorous, auditable fact‑checking where evidence‑based conclusions, transparency, and up‑to‑date source verification are required. |
+
+**Recommendation:**  
+If your goal is a **transparent, evidence‑driven fact‑check** that can stand up to scrutiny (e.g., for publishing, moderation, or high‑stakes decisions), the agentic pipeline is superior despite its greater complexity.  
+If you need a **rapid, low‑effort sanity check** and can accept the limitations of the LLM’s internal knowledge, direct prompting may suffice—though you should still treat its output as a starting point, not a final verdict.

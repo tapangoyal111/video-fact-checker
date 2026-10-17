@@ -1,0 +1,18 @@
+Contex:
+I want to create online video fact-checker that allows user to check the authencity of a video by providing its link. It could be a youtube or instagram video link. Final result should be a detailed report on the authenticity of the video, including information about its source, any potential manipulations, and related fact-checking resources. The tool should also provide a summary of the video content and any relevant context to help users understand its credibility.
+
+Instruction:
+For now , i want to create a video transcript generator that can extract the audio from the provided video link and convert it into text format. The transcript should be accurate and include timestamps for each segment of the video. Additionally, the tool should be able to handle different languages and provide options for users to select their preferred language for the transcript. The generated transcript will serve as a foundation for further analysis and fact-checking of the video content.
+
+Steps:
+1. A link will be provided by the user , for now as argument. 
+2. Check if the video is publicly accessible and can be downloaded or streamed.
+3. Extract the audio from the video using a suitable library or tool (e.g., youtube-dl, ffmpeg).
+4. Convert the extracted audio into text format using a speech-to-text service or library (e
+.g., Google Cloud Speech-to-Text, OpenAI Whisper).
+5. Generate a transcript with accurate timestamps for each segment of the video.
+6. Implement language detection and translation features to support multiple languages for the transcript.
+7. Also include the meta data of the video such as title, description, upload date, and channel information in the transcript report.
+
+Purpose:
+The purpose of this video transcript generator is to provide users with a reliable and efficient way to convert video content into text format.
